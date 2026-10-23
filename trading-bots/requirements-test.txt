@@ -3,3 +3,5 @@
 pytest==9.0.3
 pytest-asyncio==1.4.0
 ruff==0.6.9
+# Transitive (pytest) floor above advisories (osv-scanner resolves minimum versions).
+pygments>=2.20.0
