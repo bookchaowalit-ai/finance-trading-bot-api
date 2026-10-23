@@ -1,24 +1,13 @@
-# Core dependencies
-python-dotenv==1.0.0
+# Runtime dependencies: only packages the code imports (src/, main.py, setup_database*.py).
+# Removed 2026-10-23: requests, schedule, alpaca-trade-api, oandapyV20, ta-lib, pandas-ta
+# (never imported; pandas-ta==0.3.14b0 is no longer on PyPI, so this file could not install).
+python-dotenv==1.2.4
 psycopg2-binary==2.9.9
 pandas==2.1.4
 numpy==1.24.3
-requests==2.31.0
-aiohttp==3.9.1
-schedule==1.2.0
-
-# Trading APIs
-ccxt==4.2.25  # Crypto exchanges
-alpaca-trade-api==3.1.1  # Stock trading
-oandapyV20==0.7.2  # Forex trading
-
-# Technical Analysis
-ta-lib==0.4.28
-pandas-ta==0.3.14b0
-
-# Logging and monitoring
+aiohttp==3.14.5
+ccxt==4.2.25  # crypto exchanges (async_support)
 loguru==0.7.2
-
-# Testing
-pytest==7.4.3
-pytest-asyncio==0.21.1
+# Transitive pins above known-vulnerable versions (osv-scanner).
+certifi>=2026.10.19
+idna>=3.15
