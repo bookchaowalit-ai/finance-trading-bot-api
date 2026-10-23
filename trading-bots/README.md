@@ -4,8 +4,8 @@ A Python-based automated trading system that supports multiple exchanges, market
 
 ## Features
 
-- **Multi-Exchange Support**: Binance, Coinbase, Alpaca, OANDA, and more
-- **Multiple Markets**: Cryptocurrency, Stock, and Forex trading
+- **Exchange connectors** (`src/exchanges/`): Binance, Binance TH, Bitkub, InnovestX; every one is wrapped in a paper exchange unless `TRADING_MODE=live`
+- **Markets**: crypto (Binance, Binance TH, Bitkub) and Thai stocks (InnovestX); no forex connector exists
 - **Trading Strategies**: Grid trading, Momentum trading, and extensible framework
 - **Database Integration**: Supabase and Neon PostgreSQL support
 - **Risk Management**: Position sizing, stop-loss, take-profit
@@ -245,19 +245,15 @@ Identifies trends using technical indicators (RSI, Moving Averages) and trades i
 
 ## Supported Exchanges
 
-### Cryptocurrency
-- **Binance**: Spot and futures trading
-- **Coinbase Pro**: Spot trading
-- **Bybit**: Spot and derivatives
+Only the connectors in `src/exchanges/` exist (2026-10-23):
 
-### Stock Trading
-- **Alpaca**: US stocks and ETFs
-- **Interactive Brokers**: Global stocks
-- **InnovestX**: Thai stock market (SET)
+- **Binance** (`binance_exchange.py`, ccxt)
+- **Binance TH** (`binance_th_exchange.py`)
+- **Bitkub** (`bitkub_exchange.py`)
+- **InnovestX** (`innovestx_exchange.py`, Thai stocks)
 
-### Forex Trading
-- **OANDA**: Major and minor currency pairs
-- **Interactive Brokers**: Forex pairs
+`src/config.py` still lists key slots for Coinbase, Bybit, Alpaca and OANDA, but there are no
+connectors for them; `bot.py` rejects those platforms.
 
 ## Risk Management
 
