@@ -1,6 +1,6 @@
 """Strategies see closed exchange klines, not one tick per cycle (offline)."""
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 import pytest
@@ -92,7 +92,7 @@ def _bot(monkeypatch, inner, config=None):
 
 @pytest.mark.asyncio
 async def test_bot_uses_closed_klines_through_paper_exchange(monkeypatch):
-    now_ms = int(datetime.utcnow().timestamp() * 1000) // 60_000 * 60_000
+    now_ms = int(datetime.now(timezone.utc).timestamp() * 1000) // 60_000 * 60_000
     rows = _rows(30, start=now_ms - 29 * 60_000)  # last row is the forming bar
     inner = _KlineExchange({"BTC/USDT": 50_000.0}, rows=rows)
     b = _bot(monkeypatch, inner, {"timeframe": "1m", "ohlcv_limit": 50})
@@ -119,7 +119,7 @@ async def test_bot_falls_back_to_ticks_without_klines(monkeypatch):
 
 @pytest.mark.asyncio
 async def test_failed_kline_refresh_keeps_bars_and_never_mixes_ticks(monkeypatch):
-    now_ms = int(datetime.utcnow().timestamp() * 1000) // 60_000 * 60_000
+    now_ms = int(datetime.now(timezone.utc).timestamp() * 1000) // 60_000 * 60_000
     inner = _KlineExchange({"BTC/USDT": 50_000.0}, rows=_rows(10, start=now_ms - 10 * 60_000))
     b = _bot(monkeypatch, inner)
     await b._update_market_data("BTC/USDT")
@@ -167,7 +167,7 @@ class _CountingStrategy(GridTradingStrategy):
 async def test_each_closed_bar_is_analysed_once(monkeypatch):
     # 4h bars: a 60 s cycle sees the same last closed bar many times.
     step = 4 * 3600 * 1000
-    now_ms = int(datetime.utcnow().timestamp() * 1000) // step * step
+    now_ms = int(datetime.now(timezone.utc).timestamp() * 1000) // step * step
     start = now_ms - 20 * step
     inner = _KlineExchange({"BTC/USDT": 50_000.0}, rows=_rows(19, start=start, step_ms=step))
     b = _bot(monkeypatch, inner, {"timeframe": "4h"})
